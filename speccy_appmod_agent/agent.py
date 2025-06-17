@@ -1,7 +1,7 @@
 import base64
 import logging
 
-from google.adk.agents import Agent, SequentialAgent, LoopAgent
+from google.adk.agents import SequentialAgent, LoopAgent
 from google.adk.agents.callback_context import CallbackContext
 
 from .sub_agents.debugging_agent import debugging_agent
@@ -131,7 +131,7 @@ def _save_uploaded_image_to_state(callback_context: CallbackContext):
 
 code_refinement_loop = LoopAgent(
     name="CodeRefinementLoop",
-    max_iterations=10,
+    max_iterations=3,
     sub_agents=[
         validation_agent,
         debugging_agent,

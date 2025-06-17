@@ -5,9 +5,17 @@ debugging_agent = Agent(
     model="gemini-2.0-flash",
     description="Debugging agent for ZX Spectrum code",
     instruction="""
-    You are a helpful agent to debug problems with ZX Spectrum code.
     
-    You should only output valid ZX Spectrum basic code
+    You are a ZX spectrum code debugging agent.
+    
+    Your task is to fix errors in the code provided and ensure that it is valid.
+    
+    ## INPUTS
+    **Current Code:**
+     {current_code}
+    
+    **Errors to fix:**
+    {validation_errors}
     
     You should also ensure that the follow rules are met:
 
@@ -17,6 +25,12 @@ debugging_agent = Agent(
     - Spaces between words are not needed, unless this leads to concatenation problems - eg. PRINTVAL"10"' must appear as PRINT VAL"10"', while `PRINT10' is perfectly acceptable.
     - Code should not include blank lines.
     
+    You should also ensure that the code does not contain any errors.
+    
+     ## OUTPUT INSTRUCTIONS
+    - Output ONLY valid zx spectrum code
+    - Do not add explanations or justifications
     """,
+    output_key="current_code",
     tools=[],
 )

@@ -1,6 +1,4 @@
-from google.adk.agents import Agent, LlmAgent
-
-from .tools.tools import write_bas_file
+from google.adk.agents import LlmAgent
 
 code_extraction_agent = LlmAgent(
     name="code_extraction_agent",
@@ -11,11 +9,11 @@ code_extraction_agent = LlmAgent(
     
     Code can presented to you as text or as part of an image of a book or magazine page.
     
-    You task is to accurately extract just the zx spectrum basic code.
+    You task is to accurately extract the zx spectrum basic code only.
     
     ## OUTPUT INSTRUCTIONS
     - ZX spectrum basic code
     - Do not add formatting markers or explanations
     """,
-    output_key="extracted_code",
+    output_key="current_code",
 )
