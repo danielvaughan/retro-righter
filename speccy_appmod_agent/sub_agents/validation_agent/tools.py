@@ -11,14 +11,13 @@ from typing import Dict, Any
 
 from google.adk.tools import ToolContext
 
-
-def validate_spectrum_code(spectrum_code: str) -> str:
+def validate_spectrum_code(current_code: str) -> str:
     """
     Takes Spectrum BASIC code as a string, writes it to a temporary file,
     runs it through bas2tap to validate the code and returns the output from the command.
 
     Args:
-        spectrum_code: A string containing the Spectrum BASIC code.
+        current_code: A string containing the Spectrum BASIC code.
 
     Returns:
         The captured stdout and stderr from the bas2tap command as a string.
@@ -32,7 +31,7 @@ def validate_spectrum_code(spectrum_code: str) -> str:
         # Create a temporary file for the BASIC code
         with tempfile.NamedTemporaryFile(mode='w', suffix='.bas', delete=False, encoding='utf-8') as f:
             temp_bas_file = f.name
-            f.write(spectrum_code)
+            f.write(current_code)
 
         # Create a temporary file for the TAP output
         with tempfile.NamedTemporaryFile(suffix='.tap', delete=False) as f:

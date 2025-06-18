@@ -1,18 +1,23 @@
+import logging
+
 from google.adk.agents import Agent
+
+logger = logging.getLogger(__name__)
 
 debugging_agent = Agent(
     name="debugging_agent",
     model="gemini-2.0-flash",
     description="Debugging agent for ZX Spectrum code",
     instruction="""
-    
     You are a ZX spectrum code debugging agent.
     
-    Your task is to fix errors in the code provided and ensure that it is valid.
+    You are given code that has errors and a list of known errors to fix.
+    
+    Your task is to fix errors in the code and provide valid zx spectrum code.
     
     ## INPUTS
     **Current Code:**
-     {current_code}
+    {current_code}
     
     **Errors to fix:**
     {validation_errors}

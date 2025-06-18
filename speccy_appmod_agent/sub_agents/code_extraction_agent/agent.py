@@ -1,4 +1,8 @@
+import logging
+
 from google.adk.agents import LlmAgent
+
+logger = logging.getLogger(__name__)
 
 code_extraction_agent = LlmAgent(
     name="code_extraction_agent",
