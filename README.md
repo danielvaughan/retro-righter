@@ -1,4 +1,4 @@
-# Speccy Appmod
+# Retro Righter
 
 ## Getting Started
 

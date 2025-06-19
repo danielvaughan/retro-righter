@@ -1,6 +1,8 @@
 import logging
+import os
 import uuid
 
+import google
 from google.adk import Runner
 from google.adk.agents import SequentialAgent, LoopAgent
 from google.adk.artifacts import InMemoryArtifactService
@@ -16,10 +18,15 @@ from .tools import _save_uploaded_image_to_state, _save_tap_artifact_to_state
 
 logger = logging.getLogger(__name__)
 
+_, project_id = google.auth.default()
+os.environ.setdefault("GOOGLE_CLOUD_PROJECT", project_id)
+os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
+os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
+
 session_service_stateful = InMemorySessionService()
 artifact_service = InMemoryArtifactService()
 
-APP_NAME = "Speccy AppMod Agent"
+APP_NAME = "retro-righter"
 USER_ID = "anonymous"
 SESSION_ID = str(uuid.uuid4())
 stateful_session = session_service_stateful.create_session(
