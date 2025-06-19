@@ -16,6 +16,9 @@ FROM python:3.11-slim
 
 RUN pip install --no-cache-dir uv==0.6.12
 
+COPY bin/bas2tap /usr/local/bin/bas2tap
+RUN chmod +x /usr/local/bin/bas2tap
+
 WORKDIR /code
 
 COPY ./pyproject.toml ./README.md ./uv.lock* ./
