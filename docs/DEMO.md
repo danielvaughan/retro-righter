@@ -24,6 +24,8 @@ When testing, I accidentally sent the prompt "say hello" and it created a valid 
 
 Could I actually "vibe code" spectrum games. I tried "Write spectrum implementation of the game of life"
 
+It may seem a tricial example but I see ADK and similar agentic tools as a great way to automate business processes and many will have an element of taking paper and validating the content.
+
 ## References
 
 * [Computer Space Games](https://drive.google.com/file/d/0Bxv0SsvibDMTNlMwTi1PTlVxc2M/view?resourcekey=0-kaU6eyAmIVhT3_H8RkHfHA)
