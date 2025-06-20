@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from speccy_appmod_agent.sub_agents.validation_agent.tools import validate_spectrum_code
+from retro_righter.sub_agents.validation_agent.tools import validate_spectrum_code
 
 
 class TestValidateSpectrumCode(unittest.TestCase):
