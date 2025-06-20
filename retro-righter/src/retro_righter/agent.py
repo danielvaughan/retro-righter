@@ -1,8 +1,12 @@
 import logging
 import os
+import sys
 import uuid
 
 import google
+
+from google.cloud import logging as cloud_logging
+
 from google.adk import Runner
 from google.adk.agents import SequentialAgent, LoopAgent
 from google.adk.artifacts import InMemoryArtifactService
@@ -15,6 +19,25 @@ from .sub_agents.tap_creation_agent.agent import tap_creation_agent
 from .sub_agents.validation_agent import validation_agent
 
 from .tools import _save_uploaded_image_to_state, _save_tap_artifact_to_state
+
+IS_CLOUD_RUN_ENV = os.environ.get('K_SERVICE') is not None
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+
+if IS_CLOUD_RUN_ENV:
+    print("Cloud Run environment detected. Using structured logging.")
+    cloud_logging_client = cloud_logging.Client()
+    cloud_logging_client.setup_logging(log_level=root_logger.level)
+else:
+    print("Local environment detected. Using human-readable logging.")
+    console_handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    console_handler.setFormatter(formatter)
+    root_logger.addHandler(console_handler)
+    root_logger.setLevel(logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 

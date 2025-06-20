@@ -6,9 +6,10 @@ from google.adk.agents.callback_context import CallbackContext
 
 logger = logging.getLogger(__name__)
 
+
 # --- Helper function to decode base64 ---
 def _decode_b64_str(s: str) -> bytes:
-    """Decode a base64 string, stripping data URL prefixes and adding padding."""
+    """Decode a base64 string, stripping data URL prefixes, and adding padding."""
     if isinstance(s, str) and s.startswith("data:"):
         parts = s.split(",", 1)
         if len(parts) == 2:
@@ -21,12 +22,12 @@ def _decode_b64_str(s: str) -> bytes:
         return base64.b64decode(s)
     except Exception as e:
         logger.error(f"Base64 decoding failed in callback: {e}", exc_info=True)
-        raise  # Re-raise to indicate failure
+        raise
 
 
 # --- Callback to save uploaded image(s) to state ---
 def _save_uploaded_image_to_state(callback_context: CallbackContext):
-    """Extracts image data from incoming message, base64 encodes it, and saves to session state."""
+    """Extracts image data from an incoming request, base64 encodes it, and saves to session state."""
     logger.info("--- Entering _save_uploaded_image_to_state callback ---")
     state = callback_context.state
     user_content = callback_context.user_content
@@ -35,19 +36,18 @@ def _save_uploaded_image_to_state(callback_context: CallbackContext):
         logger.info("Callback: No content or parts found in user_content.")
         return
 
-    image_parts_list = []  # NEW: List to store all image parts
-    first_image_b64 = None  # To maintain compatibility with single-edit tools
+    # Clears image session state
+    image_parts_list = []
+    first_image_b64 = None
 
     keys_to_clear = [
         "uploaded_image_b64",
         "uploaded_mask_b64",
         "uploaded_image_parts",
-        # Add any other image-specific state keys you might introduce later
     ]
     cleared_keys_log = []
 
     for key in keys_to_clear:
-        # Set to None instead of pop/del
         if state.get(key) is not None:
             state[key] = None
             logger.debug(f"Cleared key '{key}' in session state by setting to None.")

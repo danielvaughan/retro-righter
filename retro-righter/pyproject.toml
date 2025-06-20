@@ -87,7 +87,8 @@ build-backend = "hatchling.build"
 
 
 [tool.pytest.ini_options]
-pythonpath = "."
+pythonpath = ["src"] # This tells pytest to add 'src' to the Python path
+testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.hatch.build.targets.wheel]
