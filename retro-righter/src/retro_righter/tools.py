@@ -1,6 +1,7 @@
 import base64
 import logging
-import google.genai.types as types
+import os
+from google.cloud import storage
 
 from google.adk.agents.callback_context import CallbackContext
 
@@ -125,29 +126,62 @@ def _save_uploaded_image_to_state(callback_context: CallbackContext):
     logger.info("--- Exiting _save_uploaded_image_to_state callback ---")
 
 
-def _save_tap_artifact_to_state(callback_context: CallbackContext):
+def _upload_to_gcs_and_get_url(callback_context: CallbackContext):
+    """Uploads a file to a GCS bucket and returns its public URL.
+
+    The bucket name is read from the 'GCS_BUCKET_NAME' environment variable.
+    The uploaded object is made publicly readable.
+
+    Args:
+        tap_file_path: The local path to the file to upload.
+
+    Returns:
+        The public URL of the uploaded file in GCS.
+
+    Raises:
+        ValueError: If the GCS_BUCKET_NAME environment variable is not set.
+        FileNotFoundError: If the file at tap_file_path does not exist.
+        google.api_core.exceptions.GoogleAPICallError: For GCS API errors.
+    """
     state = callback_context.state
-    logger.info(f"state: {state.get('tap_file_path')}")
-    filepath = state.get('tap_file_path').strip()
-    filename = "zxspectrum.tap"
+    tap_file_path = state.get("tap_file_path")
+    logger.info(f"Attempting to upload file '{tap_file_path}' to GCS.")
 
-    with open(filepath, "rb") as f:
-        tap_bytes = f.read()
+    bucket_name = os.environ.get("GCS_BUCKET_NAME")
+    if not bucket_name:
+        logger.error("GCS_BUCKET_NAME environment variable not set.")
+        raise ValueError("GCS_BUCKET_NAME environment variable is not set.")
 
-    logger.info(f"read: {len(tap_bytes)} bytes")
-
-    tap_mime_type = "application/x-zx-tap"
-
-    # Using the constructor
-    tap_artifact = types.Part(
-        inline_data=types.Blob(data=tap_bytes, mime_type=tap_mime_type)
-    )
+    if not os.path.exists(tap_file_path):
+        logger.error(f"File not found at path: {tap_file_path}")
+        raise FileNotFoundError(f"The specified file does not exist: {tap_file_path}")
 
     try:
-        version = callback_context.save_artifact(filename=filename, artifact=tap_artifact)
-        logger.info(f"Successfully saved Python artifact '{filename}' as version {version}.")
-    except ValueError as e:
-        logger.error(f"Error saving Python artifact: {e}. Is ArtifactService configured in Runner?")
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+
+        # Use the filename as the destination blob name
+        blob_name = os.path.basename(tap_file_path)
+        blob = bucket.blob(blob_name)
+
+        logger.debug(f"Uploading '{blob_name}' to bucket '{bucket_name}'...")
+        blob.upload_from_filename(tap_file_path)
+        logger.info(f"Successfully uploaded '{blob_name}' to GCS bucket '{bucket_name}'.")
+
+        logger.debug(f"Making blob '{blob_name}' public...")
+        blob.make_public()
+        logger.info(f"Blob '{blob_name}' is now publicly accessible.")
+
+        public_url = blob.public_url
+        logger.info(f"Public URL: {public_url}")
+        state["tap_public_url"] = public_url
     except Exception as e:
-        # Handle potential storage errors (e.g., GCS permissions)
-        logger.error(f"An unexpected error occurred during Python artifact save: {e}")
+        logger.error(f"Failed to upload file to GCS: {e}", exc_info=True)
+        # Re-raise the exception to be handled by the caller
+        raise
+
+    finally:
+        # Delete the local file after successful upload
+        if os.path.exists(tap_file_path):
+            os.remove(tap_file_path)
+            logger.debug(f"Deleted local file '{tap_file_path}' after successful upload.")

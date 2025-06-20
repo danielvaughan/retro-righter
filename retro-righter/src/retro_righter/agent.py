@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import uuid
+import asyncio
 
 import google
 
@@ -18,7 +19,7 @@ from .sub_agents.summary_agent import summary_agent
 from .sub_agents.tap_creation_agent.agent import tap_creation_agent
 from .sub_agents.validation_agent import validation_agent
 
-from .tools import _save_uploaded_image_to_state, _save_tap_artifact_to_state
+from .tools import _save_uploaded_image_to_state, _upload_to_gcs_and_get_url
 
 IS_CLOUD_RUN_ENV = os.environ.get('K_SERVICE') is not None
 
@@ -51,12 +52,6 @@ artifact_service = InMemoryArtifactService()
 
 APP_NAME = "retro-righter"
 USER_ID = "anonymous"
-SESSION_ID = str(uuid.uuid4())
-stateful_session = session_service_stateful.create_session(
-    app_name=APP_NAME,
-    user_id=USER_ID,
-    session_id=SESSION_ID,
-)
 
 code_refinement_loop = LoopAgent(
     name="CodeRefinementLoop",
@@ -76,7 +71,7 @@ image_to_tap_agent = SequentialAgent(
         tap_creation_agent,
     ],
     before_agent_callback=_save_uploaded_image_to_state,
-    after_agent_callback=_save_tap_artifact_to_state,
+    after_agent_callback=_upload_to_gcs_and_get_url,
 )
 
 root_agent = SequentialAgent(
@@ -87,11 +82,28 @@ root_agent = SequentialAgent(
     ],
 )
 
-logger.info(f"root_agent '{root_agent.name}' initialized")
+async def main():
+    SESSION_ID = str(uuid.uuid4())
+    logger.info(f"Initializing session with ID: {SESSION_ID} for app: {APP_NAME} and user: {USER_ID}")
+    stateful_session = await session_service_stateful.create_session(
+        app_name=APP_NAME,
+        user_id=USER_ID,
+        session_id=SESSION_ID,
+    )
+    logger.info(f"Stateful session created successfully: {stateful_session}")
 
-runner = Runner(
-    agent=root_agent,
-    app_name=APP_NAME,
-    session_service=session_service_stateful,
-    artifact_service=artifact_service,
-)
+    logger.info(f"root_agent '{root_agent.name}' initialized")
+
+    runner = Runner(
+        agent=root_agent,
+        app_name=APP_NAME,
+        session_service=session_service_stateful,
+        artifact_service=artifact_service,
+    )
+    # Placeholder for how you might run your agent, e.g.:
+    # await runner.run_cli_chat(session_id=SESSION_ID)
+    print(f"Async setup complete. Session ID: {SESSION_ID}. Runner created. Agent is ready.")
+
+if __name__ == "__main__":
+    logger.info("Starting Retro Righter application...")
+    asyncio.run(main())

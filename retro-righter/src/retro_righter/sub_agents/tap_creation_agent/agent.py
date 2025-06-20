@@ -1,26 +1,15 @@
-import logging
-
 from google.adk.agents import Agent
 
+from . import prompt
 from .tools import create_tap
 
-logger = logging.getLogger(__name__)
+MODEL = "gemini-2.5-flash"
 
 tap_creation_agent = Agent(
     name="tap_generation_agent",
-    model="gemini-2.0-flash",
+    model=MODEL,
     description="Tap creation agent for ZX Spectrum code",
-    instruction="""
-    You are an agent that creates a TAP file from Spectrum BASIC code.
-    
-    ## INPUTS
-    **Current Code:**
-    {current_code}
-    
-    ## OUTPUT INSTRUCTIONS
-    - Output ONLY the path to the generated TAP file
-    - Do not add explanations or justifications
-    """,
+    instruction=prompt.TAP_CREATION_PROMPT,
     tools=[create_tap],
     output_key="tap_file_path",
 )

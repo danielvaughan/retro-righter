@@ -20,7 +20,7 @@ You MUST ensure the following rules are strictly adhered to in the corrected cod
 
 1.  **Error Prioritization:** Address and resolve all issues explicitly listed in "Errors to Fix."
 2.  **Line Structure:** Each ZX Spectrum BASIC line MUST be provided on a single ASCII line (no wrapping).
-3.  **Keyword Case:** All ZX Spectrum BASIC keywords (e.g., `PRINT`, `GOTO`, `FOR`, `NEXT`, `REM`, `POKE`, `PEEK`) MUST appear in UPPERCASE.
+3.  **Keyword Case:** All ZX Spectrum BASIC keywords (e.g., `PRINT`, `FOR`, `NEXT`, `REM`, `POKE`, `PEEK`) MUST appear in UPPERCASE.
 4.  **Multi-Word Keywords:** Keywords consisting of multiple words (e.g., `GO TO`, `RANDOMIZE USR`, `ON ERR GOTO`) MUST retain the single space between words.
 5.  **Whitespace:**
     * Maintain essential spaces to prevent concatenation issues (e.g., `PRINT VAL"10"` is correct, not `PRINTVAL"10"`).
