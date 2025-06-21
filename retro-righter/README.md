@@ -42,16 +42,16 @@ make install && make playground
 
 ## Commands
 
-| Command              | Description                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------- |
-| `make install`       | Install all required dependencies using uv                                                  |
-| `make playground`    | Launch local development environment with backend and frontend - leveraging `adk web` command.|
-| `make backend`       | Deploy agent to Cloud Run |
-| `make local-backend` | Launch local development server |
-| `make test`          | Run unit and integration tests                                                              |
-| `make lint`          | Run code quality checks (codespell, ruff, mypy)                                             |
-| `make setup-dev-env` | Set up development environment resources using Terraform                                    |
-| `uv run jupyter lab` | Launch Jupyter notebook                                                                     |
+| Command              | Description                                                                                    |
+|----------------------|------------------------------------------------------------------------------------------------|
+| `make install`       | Install all required dependencies using uv                                                     |
+| `make playground`    | Launch local development environment with backend and frontend - leveraging `adk web` command. |
+| `make backend`       | Deploy agent to Cloud Run                                                                      |
+| `make local-backend` | Launch local development server                                                                |
+| `make test`          | Run unit and integration tests                                                                 |
+| `make lint`          | Run code quality checks (codespell, ruff, mypy)                                                |
+| `make setup-dev-env` | Set up development environment resources using Terraform                                       |
+| `uv run jupyter lab` | Launch Jupyter notebook                                                                        |
 
 For full command options and usage, refer to the [Makefile](Makefile).
 

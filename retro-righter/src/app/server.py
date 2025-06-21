@@ -68,7 +68,9 @@ def collect_feedback(feedback: Feedback) -> dict[str, str]:
     logger.log_struct(feedback.model_dump(), severity="INFO")
     return {"status": "success"}
 
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 @app.get("/ui")
 async def read_root():

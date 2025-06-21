@@ -14,6 +14,7 @@ from google.adk.tools import ToolContext
 
 logger = logging.getLogger(__name__)
 
+
 def validate_spectrum_code(current_code: str) -> str:
     """
     Takes Spectrum BASIC code as a string, writes it to a temporary file,
@@ -32,23 +33,25 @@ def validate_spectrum_code(current_code: str) -> str:
     temp_bas_file = None
     temp_tap_file = None
     try:
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.bas', delete=False, encoding='utf-8') as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".bas", delete=False, encoding="utf-8"
+        ) as f:
             temp_bas_file = f.name
             logger.debug(f"Created temporary BASIC file: {temp_bas_file}")
             f.write(current_code)
 
-        with tempfile.NamedTemporaryFile(suffix='.tap', delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".tap", delete=False) as f:
             temp_tap_file = f.name
             logger.debug(f"Created temporary TAP file: {temp_tap_file}")
 
-        command = ['bas2tap', temp_bas_file, temp_tap_file]
+        command = ["bas2tap", temp_bas_file, temp_tap_file]
         logger.info(f"Executing command: {' '.join(command)}")
 
         process = subprocess.run(
             command,
             capture_output=True,
             text=True,
-            check=False  # We'll check the return code manually
+            check=False,  # We'll check the return code manually
         )
 
         output = ""
@@ -56,7 +59,9 @@ def validate_spectrum_code(current_code: str) -> str:
             logger.debug(f"bas2tap stdout:\n{process.stdout}")
             output += f"--- stdout ---\n{process.stdout}\n"
         if process.stderr:
-            logger.warning(f"bas2tap stderr:\n{process.stderr}") # Using warning for stderr
+            logger.warning(
+                f"bas2tap stderr:\n{process.stderr}"
+            )  # Using warning for stderr
             output += f"--- stderr ---\n{process.stderr}\n"
 
         if process.returncode != 0:
@@ -65,7 +70,9 @@ def validate_spectrum_code(current_code: str) -> str:
         else:
             logger.info("bas2tap executed successfully.")
 
-        final_output = output if output else "bas2tap executed successfully with no output."
+        final_output = (
+            output if output else "bas2tap executed successfully with no output."
+        )
         logger.debug(f"Validation result: {final_output}")
         return final_output
 

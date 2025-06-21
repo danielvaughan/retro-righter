@@ -62,15 +62,12 @@ form.addEventListener('submit', async (event) => {
 
             const result = await runResponse.json();
 
-            if (result.history && Array.isArray(result.history)) {
-                const agentMessage = result.history.find(m => m.author === 'summary_agent');
+            if (result && Array.isArray(result)) {
+                const agentMessage = result.find(m => m.author === 'summary_agent');
 
                 if (agentMessage && agentMessage.content && agentMessage.content.parts && agentMessage.content.parts[0] && agentMessage.content.parts[0].text) {
-                    const extractedCode = agentMessage.content.parts[0].text;
-                    const codeBlock = extractedCode.match(/```(?:python\n)?([\s\S]*?)```/);
-                    const codeToShow = codeBlock ? codeBlock[1] : extractedCode;
-
-                    responseDiv.innerHTML = `<pre><code>${escapeHtml(codeToShow)}</code></pre>`;
+                    const responseText = agentMessage.content.parts[0].text;
+                    responseDiv.innerHTML = responseText;
                 } else {
                     responseDiv.textContent = 'Could not find a response from the agent.';
                     console.log('Unexpected response structure:', result);

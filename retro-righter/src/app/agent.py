@@ -21,7 +21,7 @@ from .sub_agents.validation_agent import validation_agent
 
 from .tools import _save_uploaded_image_to_state, _upload_to_gcs_and_get_url
 
-IS_CLOUD_RUN_ENV = os.environ.get('K_SERVICE') is not None
+IS_CLOUD_RUN_ENV = os.environ.get("K_SERVICE") is not None
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
@@ -30,15 +30,18 @@ if IS_CLOUD_RUN_ENV:
     print("Cloud Run environment detected. Using structured logging.")
     cloud_logging_client = cloud_logging.Client()
     cloud_logging_client.setup_logging(log_level=root_logger.level)
+    adk_logger = logging.getLogger("google.adk")
+    adk_logger.setLevel(logging.WARNING)
 else:
     print("Local environment detected. Using human-readable logging.")
     console_handler = logging.StreamHandler(sys.stdout)
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     console_handler.setFormatter(formatter)
     root_logger.addHandler(console_handler)
     root_logger.setLevel(logging.DEBUG)
+
 
 logger = logging.getLogger(__name__)
 
@@ -76,15 +79,15 @@ image_to_tap_agent = SequentialAgent(
 
 root_agent = SequentialAgent(
     name="RootAgent",
-    sub_agents=[
-        image_to_tap_agent,
-        summary_agent
-    ],
+    sub_agents=[image_to_tap_agent, summary_agent],
 )
+
 
 async def main():
     SESSION_ID = str(uuid.uuid4())
-    logger.info(f"Initializing session with ID: {SESSION_ID} for app: {APP_NAME} and user: {USER_ID}")
+    logger.info(
+        f"Initializing session with ID: {SESSION_ID} for app: {APP_NAME} and user: {USER_ID}"
+    )
     stateful_session = await session_service_stateful.create_session(
         app_name=APP_NAME,
         user_id=USER_ID,
@@ -100,9 +103,7 @@ async def main():
         session_service=session_service_stateful,
         artifact_service=artifact_service,
     )
-    # Placeholder for how you might run your agent, e.g.:
-    # await runner.run_cli_chat(session_id=SESSION_ID)
-    print(f"Async setup complete. Session ID: {SESSION_ID}. Runner created. Agent is ready.")
+
 
 if __name__ == "__main__":
     logger.info("Starting Retro Righter application...")

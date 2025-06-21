@@ -13,20 +13,13 @@
 #   ...
 #   {
 #     "content": {
-#       "role": "model",
 #       "parts": [
-#         {
-#           "functionResponse": {
-#             "name": "text_to_speech",
-#             "response": {
-#               "result": {
-#                 "content": [
-#                   {"type": "text", "text": "File saved as: /tmp/audio_output/audio_xyz.mp3."}
-#                 ]
-#               }
-#             }
-#           }
-#         }
+      #        {
+      #          "text": "### ZX Spectrum Code Session Report\n\nThis report summarizes the process of extracting, validating, and generating a TAP file for the provided ZX Spectrum BASIC code.\n\n#### 1. Code Functionality Overview\nThe code implements a \"satellite launch\" game. The player must launch a satellite to a randomly generated target height (H) within 8 attempts. For each attempt, the player inputs an angle and a speed. The program then calculates the difference between the player's input and the ideal angle/speed for the target height, providing feedback (\"TOO SHALLOW\", \"TOO STEEP\", \"TOO SLOW\", \"TOO FAST\"). If the player's inputs are within acceptable error margins for both angle and speed, they win. Otherwise, after 8 failed attempts, the game ends with a \"YOU'VE FAILED\" message.\n\n#### 2. Session Activity Breakdown\n-   **Initial Code State:** The BASIC code was initially extracted from an image. No immediate errors were apparent during the initial extraction.\n-   **Validation and Debugging Process:**\n    -   The code required validation and debugging.\n    -   A syntax error was identified on line 120, related to the conditional branching statement (`THEN GOTO` or `THEN <linenumber>`). The validator initially reported errors for both `THEN GOTO 200` and `THEN 200` variations.\n    -   Through two iterations of debugging, the issue was addressed. The final syntax for line 120, `IF ABS(A)<2 AND ABS(V)<100 THEN GOTO 200`, was successfully processed for TAP file generation, indicating its validity within the system's pipeline.\n    -   The code successfully passed all ZX Spectrum BASIC validation checks required for TAP file creation.\n-   **TAP File Generation:** The TAP file was successfully created from the validated code.\n\n#### 3. Access Your TAP File\n\nYou can download the generated ZX Spectrum TAP file here:\n[Download TAP File](https://storage.googleapis.com/retro-righter-taps/tmpl2wyrzgn.tap)"
+      #        }
+      #      ],
+      #      "role": "model"
+      #    },
 #       ]
 #     }
 #   }

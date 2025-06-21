@@ -22,10 +22,10 @@ backend:
 		--no-allow-unauthenticated \
 		--labels "created-by=adk" \
 		--set-env-vars \
-		"COMMIT_SHA=$(shell git rev-parse HEAD)"
+	    "COMMIT_SHA=$(shell git rev-parse HEAD),GCS_BUCKET_NAME=retro-righter-taps"
 
 local-backend:
-	uv run uvicorn app.server:app --host 0.0.0.0 --port 8000 --reload
+	uv run uvicorn src.app.server:app --host 0.0.0.0 --port 8000 --reload
 
 setup-dev-env:
 	PROJECT_ID=$$(gcloud config get-value project) && \
