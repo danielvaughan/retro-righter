@@ -1,9 +1,18 @@
+const loadMarked = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+});
+
 const form = document.getElementById('upload-form');
 const responseDiv = document.getElementById('response');
 const fileInput = document.getElementById('file');
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    await loadMarked;
 
     const file = fileInput.files[0];
     if (!file) {
@@ -67,7 +76,7 @@ form.addEventListener('submit', async (event) => {
 
                 if (agentMessage && agentMessage.content && agentMessage.content.parts && agentMessage.content.parts[0] && agentMessage.content.parts[0].text) {
                     const responseText = agentMessage.content.parts[0].text;
-                    responseDiv.innerHTML = responseText;
+                    responseDiv.innerHTML = marked.parse(responseText);
                 } else {
                     responseDiv.textContent = 'Could not find a response from the agent.';
                     console.log('Unexpected response structure:', result);
@@ -100,13 +109,4 @@ function generateUUID() { // Public Domain/MIT
         }
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
-}
-
-function escapeHtml(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
 }
