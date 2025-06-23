@@ -84,20 +84,20 @@ root_agent = SequentialAgent(
 
 
 async def main():
-    SESSION_ID = str(uuid.uuid4())
+    session_id = str(uuid.uuid4())
     logger.info(
-        f"Initializing session with ID: {SESSION_ID} for app: {APP_NAME} and user: {USER_ID}"
+        f"Initializing session with ID: {session_id} for app: {APP_NAME} and user: {USER_ID}"
     )
     stateful_session = await session_service_stateful.create_session(
         app_name=APP_NAME,
         user_id=USER_ID,
-        session_id=SESSION_ID,
+        session_id=session_id,
     )
     logger.info(f"Stateful session created successfully: {stateful_session}")
 
     logger.info(f"root_agent '{root_agent.name}' initialized")
 
-    runner = Runner(
+    Runner(
         agent=root_agent,
         app_name=APP_NAME,
         session_service=session_service_stateful,
