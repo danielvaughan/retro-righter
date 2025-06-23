@@ -44,7 +44,7 @@ This project is organised as follows:
 ```
 src/
 ├── app/                 # Core application code
-│   ├── agent.py         # Main agent logic
+│   ├── agent.py         # Root agent logic
 │   ├── sub_agents  
 │   │   ├── code_extraction_agent
 │   │   ├── debugging_agent
@@ -54,11 +54,18 @@ src/
 │   ├── server.py        # FastAPI Backend server
 │   └── utils/           # Utility functions and helpers
 ├── deployment/          # Infrastructure and deployment scripts
-├── notebooks/           # Jupyter notebooks for prototyping and evaluation
+├── docs/                # Documentation
+├── scripts/             # Testing and verification scripts
+├── static/              # UI
 ├── tests/               # Unit, integration, and load tests
+├── Dockerfile           # Dockerfile to use for Cloud Run container
 ├── Makefile             # Makefile for common commands
 └── pyproject.toml       # Project dependencies and configuration
 ```
+
+## Architecture
+
+![Architecture Diagram](docs/images/architecture.png)
 
 ## Requirements
 
@@ -93,13 +100,6 @@ make install && make playground
 
 For full command options and usage, refer to the [Makefile](Makefile).
 
-## Deployment
-
-> **Note:** For a streamlined one-command deployment of the entire CI/CD pipeline and infrastructure using Terraform,
-> you can use the [
-`agent-starter-pack setup-cicd` CLI command](https://googlecloudplatform.github.io/agent-starter-pack/cli/setup_cicd.html).
-> Currently only supporting Github.
-
 ### Dev Environment
 
 You can test deployment towards a Dev Environment using the following command:
@@ -109,20 +109,3 @@ gcloud config set project <your-dev-project-id>
 make backend
 ```
 
-The repository includes a Terraform configuration for the setup of the Dev Google Cloud project.
-See [deployment/README.md](deployment/README.md) for instructions.
-
-### Production Deployment
-
-The repository includes a Terraform configuration for the setup of a production Google Cloud project. Refer
-to [deployment/README.md](deployment/README.md) for detailed instructions on how to deploy the infrastructure and
-application.
-
-## Monitoring and Observability
-
-> You can
-> use [this Looker Studio dashboard](https://lookerstudio.google.com/reporting/46b35167-b38b-4e44-bd37-701ef4307418/page/tEnnC
-) template for visualizing events being logged in BigQuery. See the "Setup Instructions" tab to getting started.
-
-The application uses OpenTelemetry for comprehensive observability with all events being sent to Google Cloud Trace and
-Logging for monitoring and to BigQuery for long term storage.
