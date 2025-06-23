@@ -1,5 +1,7 @@
 # Retro Righter
 
+<img src="docs/images/logo.png" alt="Retro Righter Logo" width="300px">
+
 ## Getting Started
 
 ### Setup Environment

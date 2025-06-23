@@ -1,5 +1,7 @@
 # Agentic Testing and Fixing Spectrum Code Listings with Google ADK
 
+Google had an Agent Development Kit hackathon, so I thought I would attempt at automating a complex process. The question was which one.
+
 My journey into computing began with a legendary machine: the ZX Spectrum 128K.
 
 <img src="images/spectrum.jpg" alt="Spectrum" width="300px">
